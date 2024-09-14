@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, View, FlatList, SafeAreaView } from 'react-native';
-import { useSelector } from 'react-redux';
-import { RootState } from '@reduxjs/toolkit/query';
+import React, {useMemo} from 'react';
+import {StyleSheet, View, FlatList, SafeAreaView} from 'react-native';
+import {useSelector} from 'react-redux';
+import {RootState} from '@reduxjs/toolkit/query';
 import AppBar from '../components/AppBars/AppBar';
 import DeleteCard from '../components/Cards/DeleteCard';
 
@@ -12,7 +12,13 @@ interface Product {
 }
 
 const CartScreen: React.FC = () => {
-  const products = useSelector((state: RootState) => state.products); 
+  const products = useSelector((state: RootState) => state.products);
+
+  const renderItem = useMemo(() => {
+    return ({item}: {item: Product}) => (
+      <DeleteCard item={item} Itemid={item.id} />
+    );
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -21,9 +27,7 @@ const CartScreen: React.FC = () => {
         <FlatList
           data={products}
           keyExtractor={(item: Product) => item.id}
-          renderItem={({ item }: { item: Product }) => (
-            <DeleteCard item={item} Itemid={item.id} />
-          )}
+          renderItem={renderItem}
         />
       </View>
     </SafeAreaView>
